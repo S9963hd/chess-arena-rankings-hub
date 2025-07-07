@@ -3,19 +3,47 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Trophy, Crown, Zap, Users, Calendar, ArrowRight, Star } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Trophy, Crown, Zap, Users, Calendar, ArrowRight, Star, Edit, Save, X, Plus, Minus } from "lucide-react";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("leaderboard");
-
-  // Mock data
-  const topPlayers = [
+  const [editingPlayer, setEditingPlayer] = useState<number | null>(null);
+  const [players, setPlayers] = useState([
     { id: 1, name: "Magnus Carlsen", rating: 2847, avatar: "/api/placeholder/40/40", rank: 1, points: 12.5 },
     { id: 2, name: "Fabiano Caruana", rating: 2820, avatar: "/api/placeholder/40/40", rank: 2, points: 11.0 },
     { id: 3, name: "Ding Liren", rating: 2810, avatar: "/api/placeholder/40/40", rank: 3, points: 10.5 },
     { id: 4, name: "Ian Nepomniachtchi", rating: 2795, avatar: "/api/placeholder/40/40", rank: 4, points: 10.0 },
     { id: 5, name: "Anish Giri", rating: 2780, avatar: "/api/placeholder/40/40", rank: 5, points: 9.5 },
-  ];
+  ]);
+  const [editForm, setEditForm] = useState({ name: "", rating: 0 });
+
+  const handleEdit = (player: any) => {
+    setEditingPlayer(player.id);
+    setEditForm({ name: player.name, rating: player.rating });
+  };
+
+  const handleSave = (playerId: number) => {
+    setPlayers(players.map(player => 
+      player.id === playerId 
+        ? { ...player, name: editForm.name, rating: editForm.rating }
+        : player
+    ));
+    setEditingPlayer(null);
+  };
+
+  const handleCancel = () => {
+    setEditingPlayer(null);
+    setEditForm({ name: "", rating: 0 });
+  };
+
+  const handlePointsChange = (playerId: number, change: number) => {
+    setPlayers(players.map(player => 
+      player.id === playerId 
+        ? { ...player, points: Math.max(0, player.points + change) }
+        : player
+    ));
+  };
 
   const activeCompetitions = [
     { id: 1, name: "World Chess Championship", participants: 16, prize: "$2M", status: "live", daysLeft: 5 },
@@ -101,14 +129,14 @@ const Index = () => {
             </CardHeader>
             <CardContent className="p-0">
               <div className="space-y-0">
-                {topPlayers.map((player, index) => (
+                {players.map((player, index) => (
                   <div
                     key={player.id}
                     className={`flex items-center justify-between p-4 border-b border-border/30 last:border-b-0 hover:bg-muted/50 transition-colors ${
                       index === 0 ? 'bg-chess-gold/5' : ''
                     }`}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 flex-1">
                       <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold ${
                         index === 0 ? 'bg-chess-gold text-white' :
                         index === 1 ? 'bg-muted text-foreground' :
@@ -123,17 +151,88 @@ const Index = () => {
                           {player.name.split(' ').map(n => n[0]).join('')}
                         </AvatarFallback>
                       </Avatar>
-                      <div>
-                        <div className="font-semibold text-foreground flex items-center gap-1">
-                          {player.name}
-                          {index === 0 && <Crown className="h-4 w-4 text-chess-gold" />}
-                        </div>
-                        <div className="text-sm text-muted-foreground">Rating: {player.rating}</div>
+                      <div className="flex-1">
+                        {editingPlayer === player.id ? (
+                          <div className="space-y-2">
+                            <Input 
+                              value={editForm.name}
+                              onChange={(e) => setEditForm({...editForm, name: e.target.value})}
+                              className="h-8 text-sm"
+                              placeholder="Player name"
+                            />
+                            <Input 
+                              type="number"
+                              value={editForm.rating}
+                              onChange={(e) => setEditForm({...editForm, rating: parseInt(e.target.value) || 0})}
+                              className="h-8 text-sm"
+                              placeholder="Rating"
+                            />
+                          </div>
+                        ) : (
+                          <div>
+                            <div className="font-semibold text-foreground flex items-center gap-1">
+                              {player.name}
+                              {index === 0 && <Crown className="h-4 w-4 text-chess-gold" />}
+                            </div>
+                            <div className="text-sm text-muted-foreground">Rating: {player.rating}</div>
+                          </div>
+                        )}
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="font-bold text-chess-primary">{player.points} pts</div>
-                      <div className="text-xs text-muted-foreground">Tournament points</div>
+                    <div className="flex items-center gap-2">
+                      <div className="text-right mr-3">
+                        <div className="font-bold text-chess-primary">{player.points} pts</div>
+                        <div className="text-xs text-muted-foreground">Tournament points</div>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8 w-8 p-0"
+                          onClick={() => handlePointsChange(player.id, -0.5)}
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8 w-8 p-0"
+                          onClick={() => handlePointsChange(player.id, 0.5)}
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        {editingPlayer === player.id ? (
+                          <>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-8 w-8 p-0"
+                              onClick={() => handleSave(player.id)}
+                            >
+                              <Save className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-8 w-8 p-0"
+                              onClick={handleCancel}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-8 w-8 p-0"
+                            onClick={() => handleEdit(player)}
+                          >
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
