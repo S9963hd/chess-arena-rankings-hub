@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -68,14 +69,18 @@ const Index = () => {
               Compete in prestigious tournaments, climb the rankings, and prove your chess mastery in our global arena.
             </p>
             <div className="flex justify-center gap-4">
-              <Button size="lg" className="h-12 px-8">
-                <Zap className="h-4 w-4 mr-2" />
-                Join Tournament
-              </Button>
-              <Button variant="outline" size="lg" className="h-12 px-8">
-                View Rankings
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
+              <Link to="/join-tournament">
+                <Button size="lg" className="h-12 px-8">
+                  <Zap className="h-4 w-4 mr-2" />
+                  Join Tournament
+                </Button>
+              </Link>
+              <Link to="/rankings">
+                <Button variant="outline" size="lg" className="h-12 px-8">
+                  View Rankings
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -238,9 +243,11 @@ const Index = () => {
                 ))}
               </div>
               <div className="p-4 border-t border-border/50">
-                <Button variant="outline" className="w-full">
-                  View Full Rankings
-                </Button>
+                <Link to="/rankings" className="w-full">
+                  <Button variant="outline" className="w-full">
+                    View Full Rankings
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>
@@ -294,9 +301,11 @@ const Index = () => {
                   </div>
                 ))}
               </div>
-              <Button className="w-full mt-4" variant="outline">
-                View All Competitions
-              </Button>
+              <Link to="/competitions" className="w-full">
+                <Button className="w-full mt-4" variant="outline">
+                  View All Competitions
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         </div>
@@ -305,33 +314,39 @@ const Index = () => {
         <div className="mt-16">
           <h2 className="text-2xl font-bold text-center text-foreground mb-8">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="border-chess-primary/20 hover:border-chess-primary/50 transition-colors cursor-pointer group">
-              <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 bg-chess-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-chess-primary/20 transition-colors">
-                  <Zap className="h-6 w-6 text-chess-primary" />
-                </div>
-                <h3 className="font-semibold text-foreground mb-2">Start Playing</h3>
-                <p className="text-sm text-muted-foreground">Find opponents and start your chess journey</p>
-              </CardContent>
-            </Card>
-            <Card className="border-chess-primary/20 hover:border-chess-primary/50 transition-colors cursor-pointer group">
-              <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 bg-chess-secondary/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-chess-secondary/20 transition-colors">
-                  <Calendar className="h-6 w-6 text-chess-secondary" />
-                </div>
-                <h3 className="font-semibold text-foreground mb-2">Schedule Match</h3>
-                <p className="text-sm text-muted-foreground">Plan your next competitive game</p>
-              </CardContent>
-            </Card>
-            <Card className="border-chess-primary/20 hover:border-chess-primary/50 transition-colors cursor-pointer group">
-              <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 bg-chess-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-chess-accent/20 transition-colors">
-                  <Star className="h-6 w-6 text-chess-accent" />
-                </div>
-                <h3 className="font-semibold text-foreground mb-2">View Profile</h3>
-                <p className="text-sm text-muted-foreground">Check your stats and achievements</p>
-              </CardContent>
-            </Card>
+            <Link to="/start-playing">
+              <Card className="border-chess-primary/20 hover:border-chess-primary/50 transition-colors cursor-pointer group">
+                <CardContent className="p-6 text-center">
+                  <div className="w-12 h-12 bg-chess-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-chess-primary/20 transition-colors">
+                    <Zap className="h-6 w-6 text-chess-primary" />
+                  </div>
+                  <h3 className="font-semibold text-foreground mb-2">Start Playing</h3>
+                  <p className="text-sm text-muted-foreground">Find opponents and start your chess journey</p>
+                </CardContent>
+              </Card>
+            </Link>
+            <Link to="/schedule-match">
+              <Card className="border-chess-primary/20 hover:border-chess-primary/50 transition-colors cursor-pointer group">
+                <CardContent className="p-6 text-center">
+                  <div className="w-12 h-12 bg-chess-secondary/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-chess-secondary/20 transition-colors">
+                    <Calendar className="h-6 w-6 text-chess-secondary" />
+                  </div>
+                  <h3 className="font-semibold text-foreground mb-2">Schedule Match</h3>
+                  <p className="text-sm text-muted-foreground">Plan your next competitive game</p>
+                </CardContent>
+              </Card>
+            </Link>
+            <Link to="/profile">
+              <Card className="border-chess-primary/20 hover:border-chess-primary/50 transition-colors cursor-pointer group">
+                <CardContent className="p-6 text-center">
+                  <div className="w-12 h-12 bg-chess-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-chess-accent/20 transition-colors">
+                    <Star className="h-6 w-6 text-chess-accent" />
+                  </div>
+                  <h3 className="font-semibold text-foreground mb-2">View Profile</h3>
+                  <p className="text-sm text-muted-foreground">Check your stats and achievements</p>
+                </CardContent>
+              </Card>
+            </Link>
           </div>
         </div>
       </div>
